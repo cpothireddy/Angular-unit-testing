@@ -11,7 +11,6 @@ describe('First Test', () => {
 
     //act
     testVariable.a = true;
-
     //assert
     expect(testVariable.a).toBe(true);
   });
