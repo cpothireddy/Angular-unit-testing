@@ -1,15 +1,20 @@
+import { LoggerService } from '../Logger/logger.service';
 import { CalculatorService } from './calculator.service';
 
-describe('CalculatorService',()=>{
-  it('should add two numbers', ()=>{
-    const calculator = new CalculatorService();
-    let result = calculator.add(1,2);
-    expect(result).toBe(3);
+describe('CalculatorService', () => {
+  it('should add two numbers', () => {
+    let loggerService = new LoggerService();
+    // we are using LoggerService inside the CalculatorService
+    // so lets pass loggerService to claculatorService
+    const calculator = new CalculatorService(loggerService);
+    let result = calculator.add(2, 2);
+    expect(result).toBe(4);
   });
 
-  it('should subtract two numbers', ()=>{
-    const calculator = new CalculatorService();
-    let result = calculator.subtract(2,2);
+  it('should subtract two numbers', () => {
+    let loggerService = new LoggerService();
+    let calculator = new CalculatorService(loggerService);
+    let result = calculator.subtract(2, 2);
     expect(result).toBe(0);
   });
-})
+});
