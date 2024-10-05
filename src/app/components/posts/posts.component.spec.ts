@@ -15,7 +15,7 @@ class mockPostService {
   }
 }
 
-describe('post component', () => {
+describe('posts component', () => {
   let POSTS: Post[];
   let component: PostsComponent;
   let postService: any;
