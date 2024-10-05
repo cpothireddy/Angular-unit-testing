@@ -5,21 +5,13 @@ import { PostService } from '../../services/Post/post.service';
 import { Post } from '../../models/Post';
 import { Component, Input } from '@angular/core';
 import { By } from '@angular/platform-browser';
+import { PostComponent } from './../post/post.component';
 
 describe('posts component', () => {
   let POSTS: Post[];
   let component: PostsComponent;
   let mockPostSerive: any;
   let fixture: ComponentFixture<PostsComponent>;
-
-
-  @Component({
-    selector: 'app-post',
-    template: '<div></div>',
-  })
-  class FakePostComponent {
-    @Input() post!:Post
-  }
 
   beforeEach(() => {
     POSTS = [
@@ -41,7 +33,7 @@ describe('posts component', () => {
     ];
     mockPostSerive = jasmine.createSpyObj(['getPosts', 'deletePost']);
     TestBed.configureTestingModule({
-      declarations: [PostsComponent, FakePostComponent],
+      declarations: [PostsComponent, PostComponent],
       providers: [
         {
           provide: PostService,
@@ -52,12 +44,20 @@ describe('posts component', () => {
     fixture = TestBed.createComponent(PostsComponent);
     component = fixture.componentInstance;
   });
+  it('should create exact same number of Post Component with Posts', () => {
+    mockPostSerive.getPosts.and.returnValue(of(POSTS));
+    fixture.detectChanges();
+    const postComponentDes = fixture.debugElement.queryAll(
+      By.directive(PostComponent)
+    );
+    // By.directive will use to get the component element class
+    expect(postComponentDes.length).toEqual(POSTS.length);
+  });
   it('should set posts from the service directly', () => {
     mockPostSerive.getPosts.and.returnValue(of(POSTS));
     fixture.detectChanges();
     expect(component.posts.length).toBe(3);
   });
-  // below is the solution for 25 topic
   it('should create one post child Element for each post', () => {
     mockPostSerive.getPosts.and.returnValue(of(POSTS));
     fixture.detectChanges();
