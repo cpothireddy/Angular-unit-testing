@@ -3,12 +3,23 @@ import { PostsComponent } from './posts.component';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PostService } from '../../services/Post/post.service';
 import { Post } from '../../models/Post';
+import { Component, Input } from '@angular/core';
 
 describe('posts component', () => {
   let POSTS: Post[];
   let component: PostsComponent;
   let mockPostSerive: any;
   let fixture: ComponentFixture<PostsComponent>;
+
+
+  @Component({
+    selector: 'app-post',
+    template: '<div></div>',
+  })
+  class FakePostComponent {
+    @Input() post!:Post
+  }
+
   beforeEach(() => {
     POSTS = [
       {
@@ -29,7 +40,7 @@ describe('posts component', () => {
     ];
     mockPostSerive = jasmine.createSpyObj(['getPosts', 'deletePost']);
     TestBed.configureTestingModule({
-      declarations: [PostsComponent],
+      declarations: [PostsComponent, FakePostComponent],
       providers: [
         {
           provide: PostService,
