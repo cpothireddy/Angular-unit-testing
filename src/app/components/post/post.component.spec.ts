@@ -3,6 +3,7 @@ import { Post } from '../../models/Post';
 import { PostComponent } from './post.component';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { By } from '@angular/platform-browser';
 
 describe('post component', () => {
   let fixture: ComponentFixture<PostComponent>;
@@ -35,6 +36,23 @@ describe('post component', () => {
     const postElement: HTMLElement = fixture.nativeElement;
     const a = postElement.querySelector('a');
     expect(a?.textContent).toContain(post.title);
+  });
+
+  it('should render the post title in the anchor element using debug element', () => {
+    const post: Post = {
+      id: 1,
+      body: 'body 1',
+      title: 'title 1',
+    };
+    comp.post = post;
+    fixture.detectChanges();
+    // nativeElement, is available only on browser level
+    // if you are running the test in server or web worker then debugElement is useful
+    const postDebugElement = fixture.debugElement;
+    const aElement: HTMLElement = postDebugElement.query(
+      By.css('a')
+    ).nativeElement;
+    expect(aElement?.textContent).toContain(post.title);
   });
 
   it('should raise an event when the delete post is clicked', () => {
