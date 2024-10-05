@@ -4,6 +4,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PostService } from '../../services/Post/post.service';
 import { Post } from '../../models/Post';
 import { Component, Input } from '@angular/core';
+import { By } from '@angular/platform-browser';
 
 describe('posts component', () => {
   let POSTS: Post[];
@@ -55,6 +56,14 @@ describe('posts component', () => {
     mockPostSerive.getPosts.and.returnValue(of(POSTS));
     fixture.detectChanges();
     expect(component.posts.length).toBe(3);
+  });
+  // below is the solution for 25 topic
+  it('should create one post child Element for each post', () => {
+    mockPostSerive.getPosts.and.returnValue(of(POSTS));
+    fixture.detectChanges();
+    const debugElement = fixture.debugElement;
+    const postsElement = debugElement.queryAll(By.css('.posts'));
+    expect(postsElement.length).toBe(POSTS.length);
   });
   describe('delete', () => {
     beforeEach(() => {
