@@ -6,19 +6,19 @@ describe('CalculatorService', () => {
   let calculator: CalculatorService;
   beforeEach(() => {
     console.log('calling before each');
-    mockLoggerService = jasmine.createSpyObj('chandraService', ['log']);
+    mockLoggerService = jasmine.createSpyObj('LoggerService', ['log']);
     calculator = new CalculatorService(mockLoggerService);
   });
-  // beforeEach will run before every test case
+
   it('should add two numbers', () => {
-    console.log('calling add method');
+    console.log('calling add');
     let result = calculator.add(2, 2);
     expect(result).toBe(4);
     expect(mockLoggerService.log).toHaveBeenCalledTimes(1);
   });
 
   it('should subtract two numbers', () => {
-    console.log('calling subtract method');
+    console.log('calling subtract');
     let result = calculator.subtract(2, 2);
     expect(result).toBe(0);
     expect(mockLoggerService.log).toHaveBeenCalledTimes(1);
