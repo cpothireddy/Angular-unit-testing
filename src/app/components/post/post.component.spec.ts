@@ -2,6 +2,7 @@ import { first } from 'rxjs';
 import { Post } from '../../models/Post';
 import { PostComponent } from './post.component';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('post component', () => {
   let fixture: ComponentFixture<PostComponent>;
@@ -9,15 +10,31 @@ describe('post component', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [PostComponent],
+      // post.component.html, we have anchor tag with routerLink, so we will get error like below,
+      // Can't bind to 'routerLink' since it isn't a known property of 'a'
+      // for that we have to include router module to make known property
+      // will discuss it in upcoming discussions, but for now let use NO_ERROR_SCHEMA
+      // NO_ERROR_SCHEMA, will hide the template errors if any
+      schemas: [NO_ERRORS_SCHEMA], // supress the console errors
     });
-    // the above one is creating the testing module
     fixture = TestBed.createComponent(PostComponent);
-    // the above is for creating a component
     comp = fixture.componentInstance;
   });
   it('create a component with testBed', () => {
-    // the above one is for creating a instance for the comonent, we can access all the methods and properties using this instance.
     expect(comp).toBeDefined();
+  });
+
+  it('should render the post title in the anchor element', () => {
+    const post: Post = {
+      id: 1,
+      body: 'body 1',
+      title: 'title 1',
+    };
+    comp.post = post;
+    fixture.detectChanges(); // by using detect changes template will get update with the data we provided here.
+    const postElement: HTMLElement = fixture.nativeElement;
+    const a = postElement.querySelector('a');
+    expect(a?.textContent).toContain(post.title);
   });
 
   it('should raise an event when the delete post is clicked', () => {
