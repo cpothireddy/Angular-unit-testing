@@ -26,8 +26,27 @@ describe('Http Client Testing Module', () => {
       expect(data).toEqual(testData);
     });
     const request = httpTestingController.expectOne('/data');
-    request.flush(testData); // response provide on subscribe
-    // flush(): Resolve the request by returning a body plus additional HTTP information (such as response headers) if provided. If the request specifies an expected body type, the body is converted into the requested type. Otherwise, the body is converted to JSON by default.
+    request.flush(testData);
     expect(request.request.method).toBe('GET');
+  });
+  it('should test multiple requests', () => {
+    const testData: Data[] = [{ name: 'chandra' }, { name: 'chandra JS' }];
+
+    httpClient.get<Data[]>(testUrl).subscribe((data) => {
+      expect(data.length).toEqual(0);
+    });
+    httpClient.get<Data[]>(testUrl).subscribe((data) => {
+      expect(data).toEqual([testData[0]]);
+    });
+    httpClient.get<Data[]>(testUrl).subscribe((data) => {
+      expect(data).toEqual(testData);
+    });
+
+    const requests = httpTestingController.match(testUrl);
+    expect(requests.length).toEqual(3);
+
+    requests[0].flush([]);
+    requests[1].flush(testData[0]);
+    requests[2].flush(testData);
   });
 });
