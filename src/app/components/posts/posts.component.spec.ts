@@ -1,16 +1,16 @@
-import { of } from 'rxjs';
-import { PostsComponent } from './posts.component';
+import { Component, Input, NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { PostService } from '../../services/Post/post.service';
-import { Post } from '../../models/Post';
-import { Component, Input } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { PostComponent } from './../post/post.component';
+import { of } from 'rxjs';
+import { Post } from 'src/app/models/Post';
+import { PostService } from 'src/app/services/Post/post.service';
+import { PostComponent } from '../post/post.component';
+import { PostsComponent } from './posts.component';
 
-describe('posts component', () => {
+describe('Posts Component', () => {
   let POSTS: Post[];
   let component: PostsComponent;
-  let mockPostSerive: any;
+  let mockPostService: any;
   let fixture: ComponentFixture<PostsComponent>;
 
   beforeEach(() => {
@@ -31,75 +31,89 @@ describe('posts component', () => {
         title: 'title 3',
       },
     ];
-    mockPostSerive = jasmine.createSpyObj(['getPosts', 'deletePost']);
+
+    mockPostService = jasmine.createSpyObj(['getPosts', 'deletePost']);
+
     TestBed.configureTestingModule({
       declarations: [PostsComponent, PostComponent],
       providers: [
         {
           provide: PostService,
-          useValue: mockPostSerive,
+          useValue: mockPostService,
         },
       ],
     });
+
     fixture = TestBed.createComponent(PostsComponent);
     component = fixture.componentInstance;
   });
+
   it('should create exact same number of Post Component with Posts', () => {
-    mockPostSerive.getPosts.and.returnValue(of(POSTS));
+    mockPostService.getPosts.and.returnValue(of(POSTS));
+    //ngOnInit()
     fixture.detectChanges();
-    const postComponentDes = fixture.debugElement.queryAll(
+    const postComponentDEs = fixture.debugElement.queryAll(
       By.directive(PostComponent)
     );
-    // By.directive will use to get the component element class
-    expect(postComponentDes.length).toEqual(POSTS.length);
+
+    expect(postComponentDEs.length).toEqual(POSTS.length);
   });
-  // below is the solution for 27.
+
   it('should check whether exact post is sending to PostComponent', () => {
-    mockPostSerive.getPosts.and.returnValue(of(POSTS));
+    mockPostService.getPosts.and.returnValue(of(POSTS));
     fixture.detectChanges();
-    const postComponentDes = fixture.debugElement.queryAll(
+    const postComponentDEs = fixture.debugElement.queryAll(
       By.directive(PostComponent)
     );
-    for (let i = 0; i < postComponentDes.length; i++) {
-      let postComponentIntsance = postComponentDes[i]
+
+    for (let i = 0; i < postComponentDEs.length; i++) {
+      let postComponentInstance = postComponentDEs[i]
         .componentInstance as PostComponent;
-      expect(postComponentIntsance.post.title).toEqual(POSTS[i].title);
+      expect(postComponentInstance.post.title).toEqual(POSTS[i].title);
     }
   });
+
   it('should set posts from the service directly', () => {
-    mockPostSerive.getPosts.and.returnValue(of(POSTS));
+    mockPostService.getPosts.and.returnValue(of(POSTS));
     fixture.detectChanges();
     expect(component.posts.length).toBe(3);
   });
-  it('should create one post child Element for each post', () => {
-    mockPostSerive.getPosts.and.returnValue(of(POSTS));
+
+  it('should create one post child Element for each post ', () => {
+    mockPostService.getPosts.and.returnValue(of(POSTS));
     fixture.detectChanges();
     const debugElement = fixture.debugElement;
     const postsElement = debugElement.queryAll(By.css('.posts'));
     expect(postsElement.length).toBe(POSTS.length);
   });
+
   describe('delete', () => {
     beforeEach(() => {
-      mockPostSerive.deletePost.and.returnValue(of(true));
+      mockPostService.deletePost.and.returnValue(of(true));
       component.posts = POSTS;
     });
-    it('should delete the selected POST from the posts', () => {
-      component.delete(POSTS[0]);
+    it('should delete the selected Post from the posts', () => {
+      component.delete(POSTS[1]);
+
       expect(component.posts.length).toBe(2);
     });
-    it('should delete the actual selected POST from the posts', () => {
-      component.delete(POSTS[0]);
+
+    it('should delete the actual selected Post in Posts', () => {
+      component.delete(POSTS[1]);
+
       for (let post of component.posts) {
-        expect(post).not.toEqual(POSTS[0]);
+        expect(post).not.toEqual(POSTS[1]);
       }
     });
+
     it('should call the delete method in Post Service only once', () => {
-      component.delete(POSTS[0]);
-      expect(mockPostSerive.deletePost).toHaveBeenCalledTimes(1);
+      component.delete(POSTS[1]);
+      expect(mockPostService.deletePost).toHaveBeenCalledTimes(1);
     });
+
     it('should call delete method when post component button is clicked', () => {
       spyOn(component, 'delete');
-      mockPostSerive.getPosts.and.returnValue(of(POSTS));
+      mockPostService.getPosts.and.returnValue(of(POSTS));
       fixture.detectChanges();
 
       let postComponentDEs = fixture.debugElement.queryAll(
@@ -114,9 +128,9 @@ describe('posts component', () => {
       }
     });
 
-    it('should call the deleete mthod when the delete event is emitted in Post Component', () => {
+    it('should call the delete method when the delete event is emitted in Post Component', () => {
       spyOn(component, 'delete');
-      mockPostSerive.getPosts.and.returnValue(of(POSTS));
+      mockPostService.getPosts.and.returnValue(of(POSTS));
       fixture.detectChanges();
 
       let postComponentDEs = fixture.debugElement.queryAll(

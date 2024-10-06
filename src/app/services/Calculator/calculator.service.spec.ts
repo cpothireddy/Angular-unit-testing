@@ -1,6 +1,6 @@
+import { TestBed } from '@angular/core/testing';
 import { LoggerService } from '../Logger/logger.service';
 import { CalculatorService } from './calculator.service';
-import { TestBed } from '@angular/core/testing';
 
 function setUp() {
   const mockLoggerService = jasmine.createSpyObj('LoggerService', ['log']);
@@ -21,7 +21,8 @@ function setUp() {
 }
 describe('CalculatorService', () => {
   it('should add two numbers', () => {
-    const { calculator, loggerServiceSpy} = setUp();
+    const { calculator, loggerServiceSpy } = setUp();
+
     console.log('calling add');
     let result = calculator.add(2, 2);
     expect(result).toBe(4);
@@ -29,7 +30,7 @@ describe('CalculatorService', () => {
   });
 
   it('should subtract two numbers', () => {
-    const { calculator, loggerServiceSpy} = setUp();
+    const { calculator, loggerServiceSpy } = setUp();
     console.log('calling subtract');
     let result = calculator.subtract(2, 2);
     expect(result).toBe(0);
