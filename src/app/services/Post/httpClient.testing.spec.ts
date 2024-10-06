@@ -1,5 +1,8 @@
 import { HttpClient } from '@angular/common/http';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import {
+  HttpClientTestingModule,
+  HttpTestingController,
+} from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 
 let testUrl = '/data';
@@ -8,15 +11,23 @@ interface Data {
 }
 describe('Http Client Testing Module', () => {
   let httpClient: HttpClient;
+  let httpTestingController: HttpTestingController;
+  //HttpTestingController is useful for making testing assertions.
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
     });
-    //HttpClientModule, is the http module which conatins all actuall http calls but,
-    // HttpClientTestingModule will have all http mehtods but those will never do the actual call, theye will be jo entry in network call.
     httpClient = TestBed.inject(HttpClient);
+    httpTestingController = TestBed.inject(HttpTestingController);
   });
   it('should call the testUrl with get Request', () => {
-    httpClient.get<Data>(testUrl).subscribe();
+    const testData: Data = { name: 'chandra pothireddy' };
+    httpClient.get<Data>(testUrl).subscribe((data) => {
+      expect(data).toEqual(testData);
+    });
+    const request = httpTestingController.expectOne('/data');
+    request.flush(testData); // response provide on subscribe
+    // flush(): Resolve the request by returning a body plus additional HTTP information (such as response headers) if provided. If the request specifies an expected body type, the body is converted into the requested type. Otherwise, the body is converted to JSON by default.
+    expect(request.request.method).toBe('GET');
   });
 });
