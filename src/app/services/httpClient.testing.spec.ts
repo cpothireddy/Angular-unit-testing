@@ -46,7 +46,7 @@ describe('Http Client Testing Module', () => {
     expect(requests.length).toEqual(3);
 
     requests[0].flush([]);
-    requests[1].flush(testData[0]);
+    requests[1].flush([testData[0]]);
     requests[2].flush(testData);
   });
 });
