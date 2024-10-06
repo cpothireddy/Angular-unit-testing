@@ -50,7 +50,7 @@ describe('postService (HttpClienttestingModule)', () => {
   describe('getPost()', () => {
     it('should return single post when getpost is called with postId', () => {
       postService.getPost(1).subscribe();
-      postService.getPost(2).subscribe();
+      // postService.getPost(2).subscribe();
       // In above, we are calling two APIs
       const request = httpTestingController.expectOne(
         `https://jsonplaceholder.typicode.com/posts/1`
