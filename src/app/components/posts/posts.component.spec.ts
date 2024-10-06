@@ -53,6 +53,19 @@ describe('posts component', () => {
     // By.directive will use to get the component element class
     expect(postComponentDes.length).toEqual(POSTS.length);
   });
+  // below is the solution for 27.
+  it('should check whether exact post is sending to PostComponent', () => {
+    mockPostSerive.getPosts.and.returnValue(of(POSTS));
+    fixture.detectChanges();
+    const postComponentDes = fixture.debugElement.queryAll(
+      By.directive(PostComponent)
+    );
+    for (let i = 0; i < postComponentDes.length; i++) {
+      let postComponentIntsance = postComponentDes[i]
+        .componentInstance as PostComponent;
+      expect(postComponentIntsance.post.title).toEqual(POSTS[i].title);
+    }
+  });
   it('should set posts from the service directly', () => {
     mockPostSerive.getPosts.and.returnValue(of(POSTS));
     fixture.detectChanges();
