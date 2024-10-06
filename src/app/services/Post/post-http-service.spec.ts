@@ -47,4 +47,22 @@ describe('postService (HttpClienttestingModule)', () => {
       expect(request.request.method).toBe('GET');
     });
   });
+  describe('getPost()', () => {
+    it('should return single post when getpost is called with postId', () => {
+      postService.getPost(1).subscribe();
+      postService.getPost(2).subscribe();
+      // In above, we are calling two APIs
+      const request = httpTestingController.expectOne(
+        `https://jsonplaceholder.typicode.com/posts/1`
+      );
+      // actually we have two open API calls, but we tested only one and other one is never tested.
+      expect(request.request.method).toBe('GET');
+      // Now, the requirement is, I want to visit all APIs we made.
+      // should allow only one API, which we made in expectOne
+     // httpTestingController.verify(); // this will verify all the API calls in this test. it will through error, if there is no vist
+    });
+    afterEach(()=>{
+      httpTestingController.verify();// this will check all the API calls and return error if there is any open call
+    })
+  });
 });
