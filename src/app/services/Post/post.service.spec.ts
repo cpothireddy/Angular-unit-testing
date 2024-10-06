@@ -37,8 +37,6 @@ describe('post Service', () => {
     });
     postService = TestBed.inject(PostService);
     httpClientSpy = TestBed.inject(HttpClient) as jasmine.SpyObj<HttpClient>;
-    // as per the configuration proviuded in providers section, we should use httpClientSpyObj, whenever we use HttpClient token.
-    // so, in above httpClientSpy injection we will have the mocked methods.
   });
   describe('getPosts()', () => {
     it('should return expected posts when getPosts is called', (done: DoneFn) => {
@@ -46,7 +44,7 @@ describe('post Service', () => {
       postService.getPosts().subscribe({
         next: (posts) => {
           expect(posts).toEqual(POSTS);
-          done(); // it is saying that this test case will finish once we can done method here
+          done();
         },
         error: () => {
           done.fail;
