@@ -97,7 +97,6 @@ describe('posts component', () => {
       component.delete(POSTS[0]);
       expect(mockPostSerive.deletePost).toHaveBeenCalledTimes(1);
     });
-    // below is for 37
     it('should call delete method when post component button is clicked', () => {
       spyOn(component, 'delete');
       mockPostSerive.getPosts.and.returnValue(of(POSTS));
@@ -115,5 +114,21 @@ describe('posts component', () => {
       }
     });
 
+    it('should call the deleete mthod when the delete event is emitted in Post Component', () => {
+      spyOn(component, 'delete');
+      mockPostSerive.getPosts.and.returnValue(of(POSTS));
+      fixture.detectChanges();
+
+      let postComponentDEs = fixture.debugElement.queryAll(
+        By.directive(PostComponent)
+      );
+
+      for (let i = 0; i < postComponentDEs.length; i++) {
+        (postComponentDEs[i].componentInstance as PostComponent).delete.emit(
+          POSTS[i]
+        );
+        expect(component.delete).toHaveBeenCalledWith(POSTS[i]);
+      }
+    });
   });
 });
