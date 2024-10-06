@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { PostService } from './post.service';
 import { of } from 'rxjs';
+import { TestBed } from '@angular/core/testing';
 
 describe('post Service', () => {
   let httpClientSpy: jasmine.SpyObj<HttpClient>;
@@ -23,8 +24,21 @@ describe('post Service', () => {
     },
   ];
   beforeEach(() => {
-    httpClientSpy = jasmine.createSpyObj('HttpClient', ['get']);
-    postService = new PostService(httpClientSpy);
+    // Since http call is a server call, which we should not do actual one.
+    // so, let create a scpy object on http mthod
+    let httpClientSpyObj = jasmine.createSpyObj('HttpClient', ['get']);
+    // here, httpClientSpyObj is like nothing but the httpClient Module which we injected in service.
+
+    TestBed.configureTestingModule({
+      providers: [
+        PostService,
+        { provide: HttpClient, useValue: httpClientSpyObj },
+      ],
+    });
+    postService = TestBed.inject(PostService);
+    httpClientSpy = TestBed.inject(HttpClient) as jasmine.SpyObj<HttpClient>;
+    // as per the configuration proviuded in providers section, we should use httpClientSpyObj, whenever we use HttpClient token.
+    // so, in above httpClientSpy injection we will have the mocked methods.
   });
   describe('getPosts()', () => {
     it('should return expected posts when getPosts is called', (done: DoneFn) => {
